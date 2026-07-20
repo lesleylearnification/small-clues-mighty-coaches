@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Small Clues. Mighty Coaches.</title>
+  <style>
+    :root {
+      --bg: #f6f2eb;
+      --card: #ffffff;
+      --ink: #1d2433;
+      --muted: #697386;
+      --purple: #6847e8;
+      --teal: #117c74;
+      --line: #ddd7cd;
+      --good: #247451;
+      --warn: #9a6200;
+      --bad: #a13b49;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    button { font: inherit; }
+
+    .page {
+      width: min(960px, calc(100% - 28px));
+      margin: 28px auto;
+    }
+
+    .brand {
+      margin-bottom: 14px;
+      color: var(--purple);
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .shell {
+      overflow: hidden;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: 0 18px 45px rgba(29, 36, 51, 0.12);
+    }
+
+    .screen {
+      padding: 34px;
+    }
+
+    .hidden { display: none; }
+
+    .eyebrow {
+      color: var(--teal);
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin: 10px 0 16px;
+      font-size: clamp(2.3rem, 6vw, 4.6rem);
+      line-height: 0.98;
+    }
+
+    h2 {
+      margin: 8px 0 0;
+      font-size: clamp(1.6rem, 4vw, 2.3rem);
+    }
+
+    p {
+      line-height: 1.6;
+    }
+
+    .intro-copy {
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .button {
+      border: 0;
+      border-radius: 999px;
+      padding: 13px 20px;
+      background: var(--purple);
+      color: white;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .button:hover { opacity: 0.92; }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 26px;
+    }
+
+    .progress-copy {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 7px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .track {
+      height: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #ebe7df;
+    }
+
+    .fill {
+      height: 100%;
+      width: 0;
+      background: var(--purple);
+      transition: width 0.2s ease;
+    }
+
+    .stat {
+      min-width: 110px;
+      padding: 10px 13px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: #faf8f4;
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.15rem;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.74rem;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #eeeaff;
+      color: var(--purple);
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 11px;
+      margin: 22px 0;
+    }
+
+    .metric {
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: #fbfaf7;
+    }
+
+    .metric span {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    .metric strong {
+      font-size: 1.05rem;
+    }
+
+    .chat {
+      margin: 20px 0;
+      padding: 16px 18px;
+      border-radius: 7px 18px 18px 18px;
+      background: #f0f2f5;
+      color: #3f4858;
+    }
+
+    .chat b {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    .question {
+      margin: 22px 0 12px;
+      font-weight: 800;
+    }
+
+    .answers {
+      display: grid;
+      gap: 12px;
+    }
+
+    .answer {
+      width: 100%;
+      padding: 17px 18px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: white;
+      color: var(--ink);
+      text-align: left;
+      line-height: 1.45;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .answer:hover {
+      border-color: var(--purple);
+      background: #fbfaff;
+    }
+
+    .answer:disabled {
+      cursor: default;
+    }
+
+    .answer.good {
+      border-color: var(--good);
+      background: #eef8f2;
+    }
+
+    .answer.warn {
+      border-color: var(--warn);
+      background: #fff8ea;
+    }
+
+    .answer.bad {
+      border-color: var(--bad);
+      background: #fff0f2;
+    }
+
+    .feedback {
+      margin-top: 20px;
+      padding: 18px 20px;
+      border-left: 6px solid var(--teal);
+      border-radius: 16px;
+      background: #f5f7f6;
+    }
+
+    .feedback h3 {
+      margin: 0 0 7px;
+    }
+
+    .feedback p {
+      margin: 0;
+      color: #4d5868;
+    }
+
+    .feedback .lesson {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #dfe3e1;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .next {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 18px;
+    }
+
+    .results {
+      text-align: center;
+    }
+
+    .score {
+      margin: 18px 0 6px;
+      color: var(--purple);
+      font-size: 3rem;
+      font-weight: 900;
+    }
+
+    .profile {
+      width: min(620px, 100%);
+      margin: 18px auto 24px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 19px;
+      background: #fbfaf7;
+    }
+
+    @media (max-width: 720px) {
+      .screen { padding: 22px; }
+      .topbar { grid-template-columns: 1fr 1fr; }
+      .progress { grid-column: 1 / -1; }
+      .metrics { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="brand">Tiny Games, Huge Wins · Game 5</div>
+
+    <section class="shell">
+      <section id="intro" class="screen">
+        <div class="eyebrow">Small Clues. Mighty Coaches.</div>
+        <h1>Your team has a performance problem. Please do not prescribe vibes.</h1>
+        <p class="intro-copy">
+          Read the fictional employee data, identify the real performance gap,
+          and choose the coaching action that helps instead of assigning the
+          entire training library because one number looked emotionally unavailable.
+        </p>
+        <button id="startButton" class="button" type="button">Open Coach's Playbook</button>
+      </section>
+
+      <section id="game" class="screen hidden">
+        <div class="topbar">
+          <div class="progress">
+            <div class="progress-copy">
+              <span id="caseCount">Case 1 of 5</span>
+              <span id="progressPercent">0%</span>
+            </div>
+            <div class="track"><div id="progressFill" class="fill"></div></div>
+          </div>
+
+          <div class="stat">
+            <strong id="points">0</strong>
+            <span>Coaching Points</span>
+          </div>
+
+          <div class="stat">
+            <strong id="streak">0</strong>
+            <span>Diagnosis Streak</span>
+          </div>
+        </div>
+
+        <span id="tag" class="tag"></span>
+        <h2 id="employee"></h2>
+
+        <div id="metrics" class="metrics"></div>
+
+        <div class="chat">
+          <b id="speaker"></b>
+          <span id="comment"></span>
+        </div>
+
+        <div class="question">What is the best coaching move?</div>
+        <div id="answers" class="answers"></div>
+
+        <div id="feedback" class="feedback hidden" aria-live="polite">
+          <h3 id="feedbackHeading"></h3>
+          <p id="feedbackText"></p>
+          <p id="lesson" class="lesson"></p>
+        </div>
+
+        <div class="next">
+          <button id="nextButton" class="button hidden" type="button">Next case</button>
+        </div>
+      </section>
+
+      <section id="results" class="screen results hidden">
+        <div class="eyebrow">Your coaching profile</div>
+        <div id="finalScore" class="score"></div>
+        <h2 id="profileName"></h2>
+        <div class="profile">
+          <p id="profileText"></p>
+          <p id="profileLesson"></p>
+        </div>
+        <button id="restartButton" class="button" type="button">Play again</button>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const cases = [
+      {
+        tag: "Fluency Gap",
+        employee: "Avery",
+        speaker: "Mika, Team Lead",
+        comment: "Avery double-checks everything. The work is flawless, but each task takes long enough to qualify as a limited series.",
+        metrics: [
+          ["Accuracy", "98%"],
+          ["Speed", "Below target"],
+          ["Confidence", "Low"],
+          ["Attempts", "4 per task"]
+        ],
+        lesson: "High accuracy plus low speed usually signals a fluency gap, not missing knowledge.",
+        answers: [
+          {
+            text: "Assign timed practice that gradually increases the pace while requiring Avery to maintain the same accuracy.",
+            points: 100,
+            level: "good",
+            heading: "You diagnosed before prescribing.",
+            feedback: "Correct. Avery knows the work but has not automated it yet. Build fluency instead of adding more content to the hesitation pile."
+          },
+          {
+            text: "Assign a full knowledge review with extra examples so Avery can revisit the material before future tasks.",
+            points: 35,
+            level: "warn",
+            heading: "Plausible move. Slightly wrong problem.",
+            feedback: "The accuracy data says the knowledge is already there. This is the training equivalent of reinstalling an app because it opened slowly once."
+          },
+          {
+            text: "Assign more advanced scenarios with higher complexity so Avery can build confidence through harder performance challenges.",
+            points: 0,
+            level: "bad",
+            heading: "That was coaching by horoscope.",
+            feedback: "Harder work does not solve slow, careful performance. It usually creates slower, more careful performance wearing a brave little hat."
+          }
+        ]
+      },
+      {
+        tag: "Accuracy Gap",
+        employee: "Kai",
+        speaker: "Jordan, Sales Manager",
+        comment: "Kai answers instantly and with the confidence of someone who has never once considered being wrong. The dashboard has considered it.",
+        metrics: [
+          ["Accuracy", "64%"],
+          ["Speed", "Very fast"],
+          ["Confidence", "Very high"],
+          ["Attempts", "1 per item"]
+        ],
+        lesson: "High speed plus low accuracy calls for deliberate practice and corrective feedback before more speed.",
+        answers: [
+          {
+            text: "Assign deliberate-practice scenarios with immediate feedback and require Kai to explain the reasoning before moving forward.",
+            points: 100,
+            level: "good",
+            heading: "You diagnosed before prescribing.",
+            feedback: "Exactly. Kai needs friction, feedback, and a reason to inspect the thinking. Fast and wrong is still wrong; it just arrives early."
+          },
+          {
+            text: "Reward the fast responses and add a leaderboard so Kai can strengthen rapid decision-making through continued reinforcement.",
+            points: 0,
+            level: "bad",
+            heading: "That was coaching by horoscope.",
+            feedback: "A leaderboard would reward the exact behavior causing the problem. Congratulations: you have built an efficient error-delivery system."
+          },
+          {
+            text: "Ask Kai to mentor newer employees so teaching the process can deepen understanding through regular peer explanation.",
+            points: 40,
+            level: "warn",
+            heading: "Plausible move. Slightly wrong problem.",
+            feedback: "Explaining can help learning, but mentoring before accuracy improves risks turning one misconception into a team subscription."
+          }
+        ]
+      },
+      {
+        tag: "Root-Cause Check",
+        employee: "Morgan",
+        speaker: "Alex, Operations Lead",
+        comment: "Morgan has been one of our strongest performers for months. This week the numbers fell off a cliff and left no forwarding address.",
+        metrics: [
+          ["Accuracy", "Down 18%"],
+          ["Speed", "Down 22%"],
+          ["Confidence", "Usually high"],
+          ["Pattern", "Sudden drop"]
+        ],
+        lesson: "A sudden decline in a strong performer should trigger investigation before any learning prescription.",
+        answers: [
+          {
+            text: "Start with a coaching conversation to identify recent changes, obstacles, or system issues before assigning any training.",
+            points: 100,
+            level: "good",
+            heading: "You diagnosed before prescribing.",
+            feedback: "Correct. Sudden changes can come from workload, tools, priorities, or process problems. Diagnose first unless your budget enjoys mystery retraining."
+          },
+          {
+            text: "Assign the full refresher curriculum immediately because sudden performance declines usually indicate forgotten knowledge.",
+            points: 0,
+            level: "bad",
+            heading: "That was coaching by horoscope.",
+            feedback: "That is a very expensive guess. Morgan may need support, a fixed system, or one clarified expectation—not the content equivalent of a panic button."
+          },
+          {
+            text: "Raise Morgan's performance targets temporarily because stronger expectations can help experienced employees recover previous results.",
+            points: 25,
+            level: "warn",
+            heading: "Plausible move. Slightly wrong problem.",
+            feedback: "Higher targets are not a diagnosis. That is just placing a motivational poster on top of an unidentified obstacle."
+          }
+        ]
+      },
+      {
+        tag: "Interpersonal Gap",
+        employee: "Jordan",
+        speaker: "Sam, Department Manager",
+        comment: "Jordan crushes the work. Unfortunately, three teammates have described collaborating with Jordan as 'a character-building experience.'",
+        metrics: [
+          ["Accuracy", "97%"],
+          ["Speed", "Above target"],
+          ["Confidence", "High"],
+          ["Collaboration", "Low"]
+        ],
+        lesson: "Strong technical performance does not erase an interpersonal skill gap.",
+        answers: [
+          {
+            text: "Coach communication and collaboration using specific examples, guided practice, and follow-up observation during real team interactions.",
+            points: 100,
+            level: "good",
+            heading: "You diagnosed before prescribing.",
+            feedback: "Yes. The gap is interpersonal, so the coaching must be interpersonal. Another technical module would sharpen the one skill Jordan already uses to terrify the group chat."
+          },
+          {
+            text: "Assign advanced technical practice so Jordan can continue strengthening the expertise that contributes most to individual performance.",
+            points: 30,
+            level: "warn",
+            heading: "Plausible move. Slightly wrong problem.",
+            feedback: "Jordan's technical skill is not the problem. This option feels comfortable because it avoids the awkward conversation, which is precisely why it will not work."
+          },
+          {
+            text: "Ignore the collaboration data because consistently strong individual results usually outweigh concerns about team communication.",
+            points: 0,
+            level: "bad",
+            heading: "That was coaching by horoscope.",
+            feedback: "That is how one top performer quietly becomes four resignation letters. Team impact is performance data, not decorative emotional weather."
+          }
+        ]
+      },
+      {
+        tag: "Targeted Practice",
+        employee: "Taylor",
+        speaker: "Riley, Quality Lead",
+        comment: "Taylor keeps missing the exact same step. Everything else is solid. The mistake has now achieved recurring-character status.",
+        metrics: [
+          ["Accuracy", "82%"],
+          ["Speed", "Near target"],
+          ["Confidence", "Moderate"],
+          ["Pattern", "Same step missed"]
+        ],
+        lesson: "A narrow, repeated error calls for a narrow, repeated intervention.",
+        answers: [
+          {
+            text: "Assign a focused microgame that repeatedly practices the missed step with immediate feedback until performance becomes reliable.",
+            points: 100,
+            level: "good",
+            heading: "You diagnosed before prescribing.",
+            feedback: "Perfect. One specific gap deserves one specific intervention. Not every paper cut requires a full-body cast and an LMS enrollment."
+          },
+          {
+            text: "Restart the entire training program so Taylor can review every procedure and eventually encounter the missed step again.",
+            points: 0,
+            level: "bad",
+            heading: "That was coaching by horoscope.",
+            feedback: "That is maximum training for minimum diagnosis. Taylor does not need the whole buffet because one side dish keeps falling off the plate."
+          },
+          {
+            text: "Pair Taylor with a top performer and rely on observation to help the correct habit transfer during normal work.",
+            points: 45,
+            level: "warn",
+            heading: "Plausible move. Slightly wrong problem.",
+            feedback: "Peer support may help, but passive observation is not enough for a stubborn procedural error. Osmosis remains wildly overrated in workplace learning."
+          }
+        ]
+      }
+    ];
+
+    let currentCase = 0;
+    let score = 0;
+    let streak = 0;
+    let answered = false;
+
+    const intro = document.getElementById("intro");
+    const game = document.getElementById("game");
+    const results = document.getElementById("results");
+
+    document.getElementById("startButton").addEventListener("click", startGame);
+    document.getElementById("nextButton").addEventListener("click", nextCase);
+    document.getElementById("restartButton").addEventListener("click", startGame);
+
+    function startGame() {
+      currentCase = 0;
+      score = 0;
+      streak = 0;
+      intro.classList.add("hidden");
+      results.classList.add("hidden");
+      game.classList.remove("hidden");
+      renderCase();
+    }
+
+    function renderCase() {
+      answered = false;
+      const item = cases[currentCase];
+
+      document.getElementById("tag").textContent = item.tag;
+      document.getElementById("employee").textContent = item.employee;
+      document.getElementById("speaker").textContent = item.speaker;
+      document.getElementById("comment").textContent = item.comment;
+      document.getElementById("points").textContent = score;
+      document.getElementById("streak").textContent = streak;
+
+      const percent = Math.round((currentCase / cases.length) * 100);
+      document.getElementById("caseCount").textContent =
+        "Case " + (currentCase + 1) + " of " + cases.length;
+      document.getElementById("progressPercent").textContent = percent + "%";
+      document.getElementById("progressFill").style.width = percent + "%";
+
+      const metrics = document.getElementById("metrics");
+      metrics.innerHTML = "";
+      item.metrics.forEach(function(metric) {
+        const card = document.createElement("div");
+        card.className = "metric";
+
+        const label = document.createElement("span");
+        label.textContent = metric[0];
+
+        const value = document.createElement("strong");
+        value.textContent = metric[1];
+
+        card.appendChild(label);
+        card.appendChild(value);
+        metrics.appendChild(card);
+      });
+
+      const answers = document.getElementById("answers");
+      answers.innerHTML = "";
+
+      item.answers.forEach(function(answer, answerIndex) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "answer";
+        button.textContent = answer.text;
+        button.addEventListener("click", function() {
+          chooseAnswer(answerIndex, button);
+        });
+        answers.appendChild(button);
+      });
+
+      document.getElementById("feedback").classList.add("hidden");
+      document.getElementById("nextButton").classList.add("hidden");
+      document.getElementById("nextButton").textContent =
+        currentCase === cases.length - 1 ? "See my coaching profile" : "Next case";
+    }
+
+    function chooseAnswer(answerIndex, selectedButton) {
+      if (answered) return;
+
+      answered = true;
+      const item = cases[currentCase];
+      const choice = item.answers[answerIndex];
+
+      score += choice.points;
+      streak = choice.points === 100 ? streak + 1 : 0;
+
+      const answerButtons = document.querySelectorAll(".answer");
+      answerButtons.forEach(function(button) {
+        button.disabled = true;
+      });
+
+      selectedButton.classList.add(choice.level);
+
+      document.getElementById("feedbackHeading").textContent = choice.heading;
+      document.getElementById("feedbackText").textContent = choice.feedback;
+      document.getElementById("lesson").textContent = item.lesson;
+      document.getElementById("feedback").classList.remove("hidden");
+      document.getElementById("points").textContent = score;
+      document.getElementById("streak").textContent = streak;
+      document.getElementById("nextButton").classList.remove("hidden");
+    }
+
+    function nextCase() {
+      currentCase += 1;
+
+      if (currentCase < cases.length) {
+        renderCase();
+      } else {
+        showResults();
+      }
+    }
+
+    function showResults() {
+      game.classList.add("hidden");
+      results.classList.remove("hidden");
+
+      let profileName;
+      let profileText;
+      let profileLesson;
+
+      if (score >= 450) {
+        profileName = "The Coaching Detective";
+        profileText = "You read the clues, test the evidence, and match the intervention to the actual cause. Somewhere, an unnecessary retraining course just vanished from the calendar.";
+        profileLesson = "Keep asking whether the gap is knowledge, fluency, motivation, environment, process, or interpersonal skill.";
+      } else if (score >= 340) {
+        profileName = "The Helpful Firefighter";
+        profileText = "You usually help, but occasionally reach for the extinguisher before checking whether the smoke is coming from a toaster.";
+        profileLesson = "Name the evidence, identify the gap, and then choose the smallest intervention likely to work.";
+      } else if (score >= 220) {
+        profileName = "The Dashboard Tourist";
+        profileText = "You looked at the numbers, nodded thoughtfully, and then selected the option that felt most manager-shaped. The dashboard was not decoration, bestie.";
+        profileLesson = "Connect each data pattern to a specific performance hypothesis before choosing an action.";
+      } else if (score >= 100) {
+        profileName = "The Full-Course Enthusiast";
+        profileText = "You believe every performance problem can be healed by assigning more training. Excellent news for completion statistics. Complicated news for everyone else.";
+        profileLesson = "Stop treating every gap as missing knowledge. Sometimes the problem lives in practice, tools, workflow, incentives, or relationships.";
+      } else {
+        profileName = "Chief Executive of Vibes";
+        profileText = "Your coaching strategy is powered by optimism, confidence, and whatever sounded supportive after lunch. The energy is immaculate. The diagnosis is missing.";
+        profileLesson = "Use evidence first, assumptions second, and dramatic retraining assignments never.";
+      }
+
+      document.getElementById("finalScore").textContent = score + " / 500";
+      document.getElementById("profileName").textContent = profileName;
+      document.getElementById("profileText").textContent = profileText;
+      document.getElementById("profileLesson").textContent = profileLesson;
+    }
+  </script>
+</body>
+</html>
